@@ -15,9 +15,8 @@
 
 - Backend: Django + Django REST Framework
 - Frontend: HTML, CSS, JavaScript (Bootstrap)
-- قاعدة البيانات: SQLite / PostgreSQL
+- قاعدة البيانات: SQLite  
 - توليد باركود: Pillow + python-barcode
-- QR Code: qrcode + JavaScript QR Reader
 
 ## 🔧 طريقة التشغيل
 
