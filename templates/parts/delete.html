@@ -1,0 +1,88 @@
+
+
+{% block content %}
+
+<style>
+    .custom-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f4f7fb;
+      padding: 20px;
+    }
+  
+    .delete-confirmation-box {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 400px;
+      text-align: center;
+    }
+  
+    .confirmation-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 20px;
+    }
+  
+    .confirmation-message {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 30px;
+    }
+  
+    .button-container {
+      display: flex;
+      justify-content: space-around;
+    }
+  
+    .custom-action {
+      padding: 12px 24px;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+  
+    .custom-action--delete {
+      background-color: #dc3545;
+    }
+  
+    .custom-action--cancel {
+      background-color: #6c757d;
+    }
+  
+    .custom-action:hover {
+      opacity: 0.8;
+    }
+  
+    .custom-action--delete:hover {
+      background-color: #c82333;
+    }
+  
+    .custom-action--cancel:hover {
+      background-color: #5a6268;
+    }
+  </style>
+  
+  <div class="custom-container">
+    <div class="delete-confirmation-box">
+      <h2 class="confirmation-title">تأكيد الحذف</h2>
+      <p class="confirmation-message">هل أنت متأكد أنك تريد حذف هذا العنصر؟</p>
+
+      <form method="POST">
+        {% csrf_token %}
+        <div class="button-container">
+          <button type="submit" class="custom-action custom-action--delete">حذف</button>
+          <a href="{% url 'index' %}" class="custom-action custom-action--cancel">إلغاء</a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

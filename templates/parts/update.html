@@ -1,0 +1,103 @@
+{% load static %}
+{% block update %}
+
+<style>
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: linear-gradient(to right, #e0f7fa, #ffffff);
+    padding: 50px 0;
+    margin: 0;
+    direction: rtl;
+    text-align: right;
+  }
+
+  .container {
+    max-width: 600px;
+    margin: auto;
+    background-color: #ffffff;
+    padding: 35px 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+
+  h2 {
+    color: #007bff;
+    margin-bottom: 50px;
+    font-weight: 700;
+    font-size: 30px;
+    margin-right: 215px; 
+  }
+  
+
+  form p {
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    text-align: right;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    background-color: #f8f8f8;
+    transition: 0.3s ease;
+    text-align: right;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: #007bff;
+    background-color: #ffffff;
+    outline: none;
+  }
+
+  button {
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+  }
+
+  .back-link {
+    display: block;
+    margin-top: 20px;
+    color: #007bff;
+    font-size: 14px;
+    text-decoration: none;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>تعديل بيانات العميل</h2>
+  <form method="POST" action="">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit"> حفظ التعديلات</button>
+    <a href="{% url 'index' %}" class="back-link">↩ العودة للرئيسية</a>
+  </form>
+</div>
+
+</body>
+{% endblock update %}

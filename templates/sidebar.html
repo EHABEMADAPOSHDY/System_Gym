@@ -1,0 +1,195 @@
+{% load static %}
+
+<!-- Custom Sidebar -->
+<div class="custom-sidebar" id="sidebar">
+    <img src="{% static 'logo.jpg' %}" alt="Logo" class="custom-sidebar__logo">
+
+    <div class="custom-sidebar__info" id="client-info">
+        <p>اختر عميلًا لعرض التفاصيل</p>
+    </div>
+
+    <!-- خانة البحث للباركود -->
+    <div class="custom-sidebar__search">
+        <input type="text" id="barcode-search" placeholder="ابحث بالباركود أو جزء منه"
+               style="width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #ccc;">
+    </div>
+
+    <!-- زر خصم جلسة -->
+    <button id="deduct-session-btn"
+            onclick="deductSession()"
+            style="display: none; margin-bottom: 15px; margin-top: 5px; background-color:#dc3545; color:white; padding:10px; border:none; border-radius:5px; cursor:pointer;">
+        خصم جلسة
+    </button>
+
+    <!-- تحذير انتهاء الاشتراك -->
+    <div id="expiry-warning" style="color: red; display: none;">
+        <p><strong>⏰ انتهت مدة الاشتراك! لا يمكن خصم الجلسات.</strong></p>
+    </div>
+
+    <div style="position: absolute; bottom: 10px; right: 10px; font-size: 10px; color: #666; text-align: right;">
+        تصميم وتطوير : ايهاب عماد ابوشادي<br>01281207662
+    </div>
+</div>
+
+<!-- ✅ رسالة مؤقتة تطفو أعلى الشاشة -->
+<div id="temp-message"
+     style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            padding: 12px 20px; border-radius: 8px; background-color: #f0f0f0;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); z-index: 1000; display: none;
+            font-weight: bold; transition: opacity 0.5s; opacity: 0;">
+</div>
+
+<!-- ✅ نافذة منبثقة للتحذير -->
+<div id="popup-warning"
+     style="display: none; position: fixed; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); background-color: white;
+            border: 2px solid #dc3545; border-radius: 12px; padding: 20px 30px;
+            z-index: 2000; box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2); text-align: center;">
+    <p id="popup-warning-message" style="color: #dc3545; font-weight: bold; font-size: 16px;"></p>
+    <button onclick="closePopupWarning()"
+            style="margin-top: 15px; padding: 8px 15px; border: none;
+                   background-color: #dc3545; color: white; border-radius: 6px; cursor: pointer;">
+        إغلاق
+    </button>
+</div>
+
+<script>
+    let currentClientName = null;
+    let isProcessing = false;
+    let clientEndDate = null;
+    let remainingAmount = 0;
+
+    function showInfo(name, phone, type, sessions, start, end, barcode, remaining) {
+        const currentDate = new Date();
+        const endDate = new Date(end);
+        clientEndDate = endDate;
+        remainingAmount = remaining;
+
+        const isExpired = endDate < currentDate;
+        const endDateStyle = isExpired ? 'color: red;' : '';
+        let infoHtml = `
+        <p><strong>الاسم:</strong> ${name}</p>
+        <p><strong>رقم الموبايل:</strong> ${phone}</p>
+        <p><strong>نوع التدريب:</strong> ${type}</p>
+        <p><strong>عدد الجلسات:</strong> <span id="session-count">${sessions}</span></p>
+        <p><strong>تاريخ النهاية:</strong> <span style="${endDateStyle}">${end}</span></p>
+        ${remainingAmount > 0 ? `<p><strong>الباقي:</strong> <span style="color: red;">${remainingAmount} جنيه</span></p>` : ''}
+        `;
+
+        document.getElementById('client-info').innerHTML = infoHtml;
+        document.getElementById('deduct-session-btn').style.display = isExpired ? 'none' : 'block';
+        document.getElementById('expiry-warning').style.display = isExpired ? 'block' : 'none';
+
+        currentClientName = name;
+    }
+
+    function deductSession() {
+        if (!currentClientName || isProcessing || clientEndDate < new Date()) return;
+
+        isProcessing = true;
+
+        fetch(`/deduct_session/?name=${encodeURIComponent(currentClientName)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showTempMessage("✅ تم خصم جلسة بنجاح", '#28a745');
+                } else {
+                    showPopupWarning(data.message);
+                }
+                isProcessing = false;
+            })
+            .catch(error => {
+                console.error("خطأ في خصم الجلسة:", error);
+                showPopupWarning("حدث خطأ، حاول مرة أخرى.");
+                isProcessing = false;
+            });
+    }
+
+    function normalizeInput(input) {
+        return input.replace(/[أ-ي]/g, '').replace(/[^\x00-\x7F]/g, '');
+    }
+
+    function handleBarcodeSearch(query) {
+        const normalizedQuery = normalizeInput(query.trim());
+
+        if (!normalizedQuery || isProcessing) return;
+
+        closePopupWarning();
+
+        fetch(`/search_client/?barcode=${encodeURIComponent(normalizedQuery)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.client) {
+                    showInfo(
+                        data.client.name,
+                        data.client.mobil1,
+                        data.client.Type_of_training,
+                        data.client.Number_of_sessions,
+                        data.client.Start_date,
+                        data.client.Daytime_date,
+                        data.client.barcode,
+                        data.client.remaining_amount
+                    );
+
+                    if (clientEndDate < new Date()) {
+                        showPopupWarning("⏰ اشتراك العميل قد انتهى. لا يمكن خصم الجلسات.");
+                        isProcessing = false;
+                    } else {
+                        setTimeout(() => deductSession(), 300);
+                    }
+                } else {
+                    showPopupWarning("❌ لم يتم العثور على العميل.");
+                    document.getElementById('client-info').innerHTML = '';
+                    document.getElementById('deduct-session-btn').style.display = 'none';
+                    document.getElementById('expiry-warning').style.display = 'none';
+                    isProcessing = false;
+                }
+            })
+            .catch(error => {
+                console.error('خطأ في جلب بيانات العميل:', error);
+                showPopupWarning('حدث خطأ في البحث. حاول لاحقًا.');
+                isProcessing = false;
+            });
+    }
+
+    document.getElementById('barcode-search').addEventListener('change', function () {
+        const input = this;
+        const query = input.value;
+        input.value = '';
+        input.blur();
+        setTimeout(() => input.focus(), 100);
+        handleBarcodeSearch(query);
+    });
+
+    function showTempMessage(message, color = '#28a745') {
+        const msgBox = document.getElementById('temp-message');
+        msgBox.innerText = message;
+        msgBox.style.backgroundColor = color;
+        msgBox.style.opacity = '1';
+        msgBox.style.display = 'block';
+
+        setTimeout(() => { msgBox.style.opacity = '0'; }, 4000);
+        setTimeout(() => { msgBox.style.display = 'none'; }, 5000);
+    }
+
+    function showPopupWarning(message) {
+        const popup = document.getElementById('popup-warning');
+        const msg = document.getElementById('popup-warning-message');
+        msg.innerText = message;
+        popup.style.display = 'block';
+    }
+
+    function closePopupWarning() {
+        document.getElementById('popup-warning').style.display = 'none';
+    }
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            closePopupWarning();
+        }
+    });
+
+    window.onload = function () {
+        document.getElementById('barcode-search').focus();
+    };
+</script>

@@ -1,0 +1,145 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>إضافة مشترك جديد</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 15px;
+      color: #007bff;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    
+    .back-link:hover {
+      color: #0056b3;
+      text-decoration: underline;
+    }
+    
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #ffffff);
+      direction: rtl;
+      padding: 40px 0;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: auto;
+      background: white;
+      padding: 40px 35px;
+      border-radius: 15px;
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 24px;
+      color: #004080;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 15px;
+      background-color: #f9f9f9;
+      transition: border-color 0.3s ease;
+      text-align: right;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: #007bff;
+      background-color: #fff;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      background-color: #007bff;
+      color: white;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .error-message {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 12px 15px;
+      margin-bottom: 25px;
+      border-radius: 10px;
+      border: 1px solid #f5c6cb;
+      font-size: 15px;
+    }
+
+    .field-errors {
+      color: #d9534f;
+      font-size: 14px;
+      margin-top: -12px;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>إضافة مشترك جديد</h2>
+
+    {% if form.errors %}
+      <div class="error-message">
+        <strong>حدث خطأ:</strong> من فضلك تأكد من عدم تكرار الاسم أو رقم الهاتف.
+      </div>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      {% for field in form %}
+        <div>
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.errors %}
+            <div class="field-errors">
+              {{ field.errors|striptags }}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <button type="submit"> إضافة مشترك جديد</button>
+      <a href="{% url 'index' %}" class="back-link"> العودة إلى القائمة الرئيسية</a>
+    </form>
+  </div>
+  <script>
+    // منع الرجوع إلى الصفحة السابقة
+    history.pushState(null, '', location.href);
+    window.addEventListener('popstate', function () {
+      window.location.href = '{% url "index" %}';  // غيّر 'index' لاسم الصفحة الرئيسية عندك
+    });
+  </script>
+  
+</body>
+</html>

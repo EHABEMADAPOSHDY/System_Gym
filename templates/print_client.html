@@ -1,0 +1,78 @@
+{% load static %}
+{% block conten %}
+<style>
+  @page {
+    size: 40mm 25mm;
+    margin: 0;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    width: 40mm;
+    height: 25mm;
+    overflow: hidden;
+    background: white;
+  }
+
+  .barcode-container {
+    width: 100%;
+    height: 83%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* نخلي كل حاجة في المنتصف عرضياً */
+    justify-content: flex-start; /* نبدأ من فوق */
+    padding-top: 2mm; /* تقليل المسافة من فوق */
+    box-sizing: border-box;
+  }
+
+  .barcode-container img {
+    height: 60%;
+    object-fit: contain;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    margin: 0;
+    padding: 0;
+  }
+
+  .player-name {
+    font-size: 10.5px;
+    margin-top: 2px;
+    white-space: nowrap;
+    text-align: center; /* في منتصف العنصر */
+    direction: rtl;
+    width: 100%; /* علشان text-align يشتغل تمام */
+  }
+
+  button {
+    display: none;
+  }
+  .training-name {
+    font-size: 12px;
+    margin-top: 1px;
+    white-space: nowrap;
+    direction: rtl;
+    width: 100%;
+    text-align: right; /* يزقه شويه لليسار */
+    padding-right: 6mm; /* تباعد من اليمين علشان يروح ناحيه الشمال */
+  }
+  
+</style>
+
+<div class="barcode-container">
+  <img src="{{ client.barcode_image.url }}" alt="Barcode Image" />
+  <div class="player-name">{{ client.name }}</div>
+  <div class="training-name">{{ client.Type_of_training.name }}</div>
+
+</div>
+
+<script>
+  window.onload = function () {
+    window.print();
+    window.onafterprint = function() {
+      window.location.href = "{% url 'index' %}";
+    };
+  };
+</script>
+{% endblock %}

@@ -1,0 +1,189 @@
+  /* إعادة تعيين جميع العناصر */
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    direction: rtl;
+    padding-top: 80px;
+    background-color: #f9f9f9;
+  }
+
+  /* Custom Navbar */
+  .custom-navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 70px;
+    background-color: #1b2229;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 999;
+  }
+
+  .custom-navbar__title {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+  }
+
+  .custom-navbar__left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    direction: ltr;
+  }
+
+  .custom-navbar__logo {
+    width: 40px;
+    border-radius: 50%;
+    margin-left: 10px; /* لتباعده عن الطرف */
+  }
+
+  .custom-search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .custom-search-box__input {
+    padding: 6px 30px 6px 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+
+  .custom-search-box__icon {
+    position: absolute;
+    left: 10px;
+    color: gray;
+  }
+
+  /* Custom Sidebar */
+  .custom-sidebar {
+    width: 300px;
+    background-color: #f5f5f5;
+    position: fixed;
+    top: 70px;
+    right: 0;
+    height: calc(100vh - 70px);
+    padding: 20px;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .custom-sidebar__logo {
+    width: 100px;
+    margin-bottom: 20px;
+    border-radius: 50%;
+  }
+
+  .custom-sidebar__info {
+    flex: 1;
+    width: 100%;
+  }
+
+  .custom-sidebar__info p {
+    background: #fff;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+
+  /* Custom Main Content */
+  .custom-container {
+    margin-right: 320px;
+    padding: 20px;
+  }
+
+  .custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+  }
+
+  .custom-table th,
+  .custom-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+
+  .custom-table th {
+    background-color: rgba(0, 0, 0, 0.87);
+    color: white;
+  }
+
+  .custom-table tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+  }
+
+  .custom-action {
+    margin: 2px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    font-size: 14px;
+    display: inline-block;
+  }
+
+  .custom-action--edit {
+    background-color: #ffc107;
+  }
+
+  .custom-action--delete {
+    background-color: #dc3545;
+  }
+
+  .custom-bottom-button {
+    position: fixed;
+    bottom: 20px;
+    right: 50%;
+    transform: translateX(50%);
+    z-index: 1000;
+    background-color: #28a745;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    text-decoration: none;
+  }
+
+  .alert-warning {
+    color: red;
+    font-weight: bold;
+  }
+
+  .zero-sessions {
+    color: red;
+    font-weight: bold;
+  }
+
+  .popup-warning {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+    z-index: 1001;
+  }
+
+  .zero-sessions {
+    background-color: #f8d7da; /* تغيير خلفية الصف إلى اللون الأحمر الفاتح */
+    color:rgb(250, 15, 38); /* تغيير النص إلى لون أحمر داكن */
+    font-weight: bold; /* جعل النص عريض */
+  }
+  

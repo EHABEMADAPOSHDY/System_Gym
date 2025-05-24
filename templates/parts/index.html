@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% load static %}
+{% block index %}
+
+<style>
+  .custom-action--print {
+    background-color: #007bff;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+
+  .custom-action--print:hover {
+    background-color: #0056b3;
+  }
+
+  .popup-warning {
+    display: none;
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #ffc;
+    border: 1px solid #aaa;
+    padding: 20px;
+    z-index: 9999;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+  }
+  .custom-search-box__select {
+    padding: 5px;
+    border-radius: 5px;
+    margin-left: 10px;
+  }
+  
+</style>
+
+
+<style>
+    .custom-search-box {
+      display: flex;
+      align-items: center;
+      background: white;
+      border-radius: 30px;
+      padding: 5px 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      gap: 10px;
+    }
+  
+    .custom-search-box__select {
+      border: none;
+      background: transparent;
+      font-size: 14px;
+      padding: 5px 10px;
+      outline: none;
+      color: #333;
+      font-weight: bold;
+      border-right: 1px solid #ccc;
+    }
+  
+    .custom-search-box__input {
+      border: none;
+      padding: 8px 10px;
+      outline: none;
+      font-size: 14px;
+      flex: 1;
+      direction: rtl;
+    }
+  
+    .custom-search-box__icon {
+      font-size: 18px;
+      color: #007bff;
+      cursor: pointer;
+    }
+  
+
+
+    
+</style>
+  
+  <div class="custom-navbar">
+    <div class="custom-navbar__title">FORCE GYM</div>
+    <div class="custom-navbar__left">
+      <img src="{% static 'logo.jpg' %}" alt="Logo" class="custom-navbar__logo">
+      <form class="custom-search-box" action="{% url 'index' %}" method="GET">
+        <select name="search_type" class="custom-search-box__select">
+          <option value="name">الاسم</option>
+          <option value="mobile">رقم الموبايل</option>
+          <option value="coach">المدرب</option>
+        </select>
+        <input type="text" name="search_query" placeholder="ابحث..." class="custom-search-box__input">
+        <button type="submit" style="border:none; background:none;">
+          <i class="fa fa-search custom-search-box__icon"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+  
+    
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="custom-container">
+  <h1>نظام إدارة الجلسات</h1>
+  <table class="custom-table">
+    <thead>
+      <tr>
+        <th>الاسم</th>
+        <th>رقم الموبايل</th>
+        <th>نوع التدريب</th>
+        <th>عدد الجلسات</th>
+        <th>تاريخ البدايه</th>
+        <th>تاريخ النهايه</th>
+        <th>الإجراءات</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for data in information %}
+      <tr onclick="showInfo('{{ data.name }}', '{{ data.mobil1 }}', '{{ data.Type_of_training }}', '{{ data.Number_of_sessions }}', '{{ data.Start_date|date:'Y-m-d' }}', '{{ data.Daytime_date|date:'Y-m-d' }}')"
+      {% if data.Number_of_sessions|add:"0" == 0 %}
+          class="zero-sessions"
+          onclick="showWarning('{{ data.name }}')"
+      {% endif %}>
+        <td>{{ data.name }}</td>
+        <td>{{ data.mobil1 }}</td>
+        <td>{{ data.Type_of_training }}</td>
+        <td>{{ data.Number_of_sessions }}</td>
+        <td>{{ data.Start_date|date:'Y-m-d' }}</td>
+        <td>{{ data.Daytime_date|date:'Y-m-d' }}</td>
+        <td>
+          <a href="{% url 'update' data.id %}" class="custom-action custom-action--edit">تعديل</a>
+          <a href="{% url 'delete' data.id %}" class="custom-action custom-action--delete">حذف</a>
+          <a href="{% url 'print_client' data.id %}" class="custom-action custom-action--print">🖨️</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- زر إضافة -->
+<a href="{% url "add" %}" class="custom-bottom-button">إضافة مشترك</a>
+
+<!-- تحذير -->
+<div class="popup-warning" id="warning-popup">
+  <p>العميل لا يملك أي جلسات.</p>
+  <button onclick="closeWarning()">إغلاق</button>
+</div>
+
+<!-- سكربتات -->
+<script>
+  function showWarning(name) {
+    var warningPopup = document.getElementById("warning-popup");
+    warningPopup.style.display = "block";
+  }
+
+  function closeWarning() {
+    var warningPopup = document.getElementById("warning-popup");
+    warningPopup.style.display = "none";
+  }
+
+  // تحديث الصفحة عند الضغط مرتين في أي مكان
+  document.addEventListener('dblclick', function () {
+    window.location.href = "{% url 'index' %}";
+  });
+
+</script>
+
+</body>
+
+{% endblock index %}
