@@ -16,7 +16,7 @@
 
 ## 🛠️ التقنيات المستخدمة
 
-- Backend: Django + Django REST Framework
+- Backend: Django 
 - Frontend: HTML, CSS, JavaScript (Bootstrap)
 - قاعدة البيانات: SQLite  
 - توليد باركود: Pillow + python-barcode
