@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from .models import *
 from .froms import *
 from django.db.models import Q
-# Create your views here.
+
 
 
 
