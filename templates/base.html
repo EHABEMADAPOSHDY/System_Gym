@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قائمة الاشتراكات</title>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'css/update.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="website icon " type="jpg" href="{% static 'logo.jpg' %}">
+
+</head>
+<body>
+    {% include "sidebar.html" %}
+    
+
+    {% block index %}
+    {% endblock index %}
+
+    {% block update %}
+    {% endblock update %}
+
+    {% block content %}
+    {% endblock content %}
+    
+    {% block conten %}
+    {% endblock  %}
+    
+    {% block add %}
+    {% endblock add %}
+</body>
+</html>
+<script>
+    // منع الرجوع إلى الصفحة السابقة
+    history.pushState(null, '', location.href);
+    window.addEventListener('popstate', function () {
+      window.location.href = '{% url "index" %}';  // غيّر 'index' لاسم الصفحة الرئيسية عندك
+    });
+  </script>
+  
